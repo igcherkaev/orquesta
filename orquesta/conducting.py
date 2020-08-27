@@ -911,8 +911,13 @@ class WorkflowConductor(object):
         if new_task_status in statuses.COMPLETED_STATUSES:
             # Remove task from staging if exists but keep entry
             # if task has items and failed for manual rerun.
-            if not (task_spec.has_items() and new_task_status in statuses.ABENDED_STATUSES):
-                self.workflow_state.remove_staged_task(task_id, route)
+            # 
+            # Commenting this condition out as it causes issues for running workflows getting stuck in running state
+            # see https://github.com/StackStorm/st2/issues/5029
+            # No idea what manual rerun is, probably not using it, but running live and automatic workflows all the time
+            #
+            # if not (task_spec.has_items() and new_task_status in statuses.ABENDED_STATUSES):
+            #     self.workflow_state.remove_staged_task(task_id, route)
 
             # Format task result depending on the type of task.
             task_result = self.make_task_result(task_spec, event)
