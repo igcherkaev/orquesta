@@ -304,10 +304,7 @@ TASK_STATE_MACHINE_DATA = {
         events.ACTION_FAILED_TASK_DORMANT_ITEMS_PAUSED: statuses.FAILED,
         events.ACTION_FAILED_TASK_DORMANT_ITEMS_CANCELED: statuses.CANCELED,
         events.ACTION_FAILED_TASK_DORMANT_ITEMS_FAILED: statuses.FAILED,
-        # should still run
-#        events.ACTION_FAILED_TASK_DORMANT_ITEMS_INCOMPLETE: statuses.RUNNING,
-#        events.ACTION_FAILED_TASK_ACTIVE_ITEMS_INCOMPLETE: statuses.RUNNING,
-        #
+        events.ACTION_FAILED_TASK_DORMANT_ITEMS_INCOMPLETE: statuses.FAILED,
         events.ACTION_FAILED_TASK_DORMANT_ITEMS_COMPLETED: statuses.FAILED,
         events.ACTION_EXPIRED: statuses.FAILED,
         events.ACTION_EXPIRED_TASK_DORMANT_ITEMS_PAUSED: statuses.FAILED,
@@ -585,6 +582,7 @@ class TaskStateMachine(object):
             task_state['route'],
             ac_ex_event
         )
+
         # Identify current task status.
         current_task_status = task_state.get('status', statuses.UNSET)
 
@@ -600,7 +598,7 @@ class TaskStateMachine(object):
         # If no transition is identified, then there is no status change.
         if event_name not in TASK_STATE_MACHINE_DATA[current_task_status]:
             return
-        LOG.info("current_task_status={} event_name={}".format(current_task_status, event_name))
+
         new_task_status = TASK_STATE_MACHINE_DATA[current_task_status][event_name]
 
         # Assign new status to the task flow entry.
