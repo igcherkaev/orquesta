@@ -923,12 +923,12 @@ class WorkflowConductor(object):
         if new_task_status in statuses.COMPLETED_STATUSES:
             # Remove task from staging if exists but keep entry
             # if task has items and failed for manual rerun.
-#            if not (task_spec.has_items() and new_task_status in statuses.ABENDED_STATUSES):
-            LOG.info("Removing(1) staged task_id={} route={}".format(task_id, route))
-            self.workflow_state.remove_staged_task(task_id, route)
-#            else:
-#                staged_task = self.workflow_state.get_staged_task(task_id, route)
-#                staged_task["completed"] = True
+            if not (task_spec.has_items() and new_task_status in statuses.ABENDED_STATUSES):
+                LOG.info("Removing(1) staged task_id={} route={}".format(task_id, route))
+                self.workflow_state.remove_staged_task(task_id, route)
+            else:
+                staged_task = self.workflow_state.get_staged_task(task_id, route)
+                staged_task["completed"] = True
 
             # Format task result depending on the type of task.
             task_result = self.make_task_result(task_spec, event)
